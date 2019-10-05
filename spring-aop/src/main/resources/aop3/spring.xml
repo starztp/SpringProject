@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <!--配置目标类实例-->
+    <bean id="userserviceImpl" class="com.tianyou.aop.aop3.Impl.UserServiceImpl"></bean>
+
+    <!--配置advice-->
+    <bean id="logadvice" class="com.tianyou.aop.aop3.Advice.LogAdvice"></bean>
+
+    <!--配置PointCut并织入-->
+    <aop:config>
+        <!--配置PointCut,匹配目标类中所有的方法-->
+        <aop:pointcut id="pointcut" expression="within(com.tianyou.aop.aop3.Impl.UserServiceImpl)"></aop:pointcut>
+        <!--织入-->
+        <aop:aspect ref="logadvice">
+            <aop:before method="addlog" pointcut-ref="pointcut"></aop:before>
+            <!--后置通知，将方法返回值织入名为returnvalue的参数-->
+            <aop:after-returning method="addlogafter" pointcut-ref="pointcut" returning="returnvalue"></aop:after-returning>
+            <!--异常通知-->
+            <aop:after-throwing method="adviceexception" pointcut-ref="pointcut" throwing="e"></aop:after-throwing>
+            <!--环绕通知-->
+            <aop:around method="adviceCreatearound" pointcut-ref="pointcut"></aop:around>
+        </aop:aspect>
+    </aop:config>
+</beans>

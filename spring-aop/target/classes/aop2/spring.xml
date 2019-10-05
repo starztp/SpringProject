@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!--配置目标类实例-->
+    <bean id="userserviceImpl" class="com.tianyou.aop.aop2.Impl.UserServiceImpl"></bean>
+
+    <!--配置advice-->
+    <bean id="logadvice" class="com.tianyou.aop.aop2.advice.LogAdvice"></bean>
+    <bean id="goodbyeadvice" class="com.tianyou.aop.aop2.advice.GoodByeAdvice"></bean>
+    <bean id="timeadvice" class="com.tianyou.aop.aop2.advice.TimeAdvice"></bean>
+    <bean id="exceptionadvice" class="com.tianyou.aop.aop2.advice.ExceptionAdvice"></bean>
+
+    <!--配置Advisor,将Advice注入PointCut,织入-->
+    <!--配置PointCut-->
+    <bean id="logadvicor" class="org.springframework.aop.support.NameMatchMethodPointcutAdvisor">
+        <!--指定advice-->
+        <property name="advice" ref="logadvice"></property>
+        <!--指定要匹配哪些方法-->
+        <property name="mappedNames">
+            <list>
+                <value>login</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="goodbyeadvicor" class="org.springframework.aop.support.NameMatchMethodPointcutAdvisor">
+        <property name="advice" ref="goodbyeadvice"></property>
+        <property name="mappedNames">
+            <list>
+                <value>signout</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="timeadvicor" class="org.springframework.aop.support.NameMatchMethodPointcutAdvisor">
+        <property name="advice" ref="timeadvice"></property>
+        <property name="mappedNames">
+            <list>
+                <value>login</value>
+                <value>signout</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="exceptionadvicor" class="org.springframework.aop.support.NameMatchMethodPointcutAdvisor">
+        <property name="advice" ref="exceptionadvice"></property>
+        <property name="mappedNames">
+            <list>
+                <value>login</value>
+                <value>signout</value>
+            </list>
+        </property>
+    </bean>
+
+    <!--配置代理-->
+    <bean id="userserviceProxy" class="org.springframework.aop.framework.ProxyFactoryBean">
+        <!--配置目标类实例-->
+        <property name="target" ref="userserviceImpl"></property>
+        <!--配置目标类实现接口-->
+        <property name="interfaces">
+            <list>
+                <value>com.tianyou.aop.aop2.UserService</value>
+            </list>
+        </property>
+        <!--配置交叉业务逻辑-->
+        <property name="interceptorNames">
+            <list>
+                <value>logadvicor</value>
+                <value>goodbyeadvicor</value>
+                <value>timeadvicor</value>
+                <value>exceptionadvicor</value>
+            </list>
+        </property>
+    </bean>
+</beans>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="springBean" class="com.tianyou.spring.SpringDay7.SpringBean">
+        <property name="name" value="zhangsan"></property>
+        <property name="age" value="18"></property>
+        <property name="password" value="123"></property>
+    </bean>
+
+    <bean id="springBean1" class="com.tianyou.spring.SpringDay7.SpringBean">
+        <constructor-arg name="name" value="lisi"></constructor-arg>
+        <constructor-arg name="age"  value="20"></constructor-arg>
+        <constructor-arg name="password" value="456"></constructor-arg>
+    </bean>
+
+    <!--通过实例化工厂创建注入bean-->
+    <bean id="springBeanFactory" class="com.tianyou.spring.SpringDay7.SpringBeanFactory"></bean>
+
+    <!--通过工厂内无参方法注入bean-->
+    <bean id="springBean3" class="com.tianyou.spring.SpringDay7.SpringBean" factory-bean="springBeanFactory" factory-method="createSpringBean">
+        <property name="name" value="实例化无参工厂注入name"></property>
+    </bean>
+
+    <!--通过工厂内带参方法注入bean-->
+    <bean id="springBean4" class="com.tianyou.spring.SpringDay7.SpringBean" factory-bean="springBeanFactory" factory-method="createSpringBean">
+        <constructor-arg name="name" value="实例化带参工厂注入name"></constructor-arg>
+        <constructor-arg name="age" value="实例化带参工厂注入age"></constructor-arg>
+        <constructor-arg name="password" value="实例化带参工厂注入password"></constructor-arg>
+    </bean>
+
+</beans>

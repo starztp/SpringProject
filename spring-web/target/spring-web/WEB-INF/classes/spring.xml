@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <!--扫描包-->
+    <context:component-scan base-package="com.tianyou.Controller"></context:component-scan>
+    <context:component-scan base-package="com.tianyou.Service"></context:component-scan>
+    <context:component-scan base-package="com.tianyou.Dao"></context:component-scan>
+    <context:component-scan base-package="com.tianyou.Util"></context:component-scan>
+    <context:component-scan base-package="com.tianyou.Vo"></context:component-scan>
+
+    <bean class="com.tianyou.Util.SpringBeanHolder"></bean>
+
+    <!--读取属性文件-->
+    <context:property-placeholder location="classpath:datasource.properties"></context:property-placeholder>
+
+    <!--配置数据源-->
+    <bean id="datasource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName"  value="com.mysql.cj.jdbc.Driver"></property>
+        <property name="url" value="jdbc:mysql://localhost:3306/springproject?serverTimezone=UTC"></property>
+        <property name="username" value="root"></property>
+        <property name="password" value="w3gmaster"></property>
+    </bean>
+
+    <!--配置JdbcTemplate-->
+    <bean class="org.springframework.jdbc.core.JdbcTemplate">
+        <property name="dataSource" ref="datasource"></property>
+    </bean>
+
+    <!--配置事务管理器-->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="datasource"></property>
+    </bean>
+
+    <!--配置Advice-->
+    <tx:advice id="txAdvice" transaction-manager="transactionManager">
+        <!--配置事务属性-->
+        <tx:attributes>
+            <!--传播属性-->
+            <tx:method name="login" propagation="SUPPORTS" read-only="true"/>
+            <tx:method name="regist" propagation="REQUIRED"></tx:method>
+        </tx:attributes>
+    </tx:advice>
+
+    <!--配置切入点-->
+    <aop:config>
+        <aop:pointcut id="pc" expression="execution(* com.tianyou.Service.Impl.*.*(..))"></aop:pointcut>
+        <!--织入-->
+        <aop:advisor advice-ref="txAdvice" pointcut-ref="pc"></aop:advisor>
+    </aop:config>
+
+
+    <!--配置sqlsessionfactory-->
+    <bean class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="datasource"></property>
+        <!--配置映射文件-->
+        <property name="mapperLocations" value="classpath:com/tianyou/mapper/UserMapper.xml"></property>
+    </bean>
+</beans>
