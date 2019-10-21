@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: org.mortbay.jetty:jetty-util:${jetty.version}">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/mortbay/jetty/jetty-util/${jetty.version}/jetty-util-${jetty.version}.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/org/mortbay/jetty/jetty-util/${jetty.version}/jetty-util-${jetty.version}-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/mortbay/jetty/jetty-util/${jetty.version}/jetty-util-${jetty.version}-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
